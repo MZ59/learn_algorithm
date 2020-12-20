@@ -16,6 +16,18 @@ def insertSort(arr):
         arr[j] = target
     return arr
 
+def insertSort(arr):
+    n = len(arr)
+    for i in range(1, n):
+        target = arr[i] # 待插入
+        j = i
+        if j > 0 and target < arr[j-1]:
+            arr[j] = arr[j-1] # 后移一位
+            j -= 1
+        arr[j] = target
+    return arr
+
+
 def insertSort_ini(arr):
     n = len(arr)
     if n <= 1:

@@ -15,6 +15,20 @@ def binary_search(arr, target):
         else:
             return mid
 
+def binary_search(arr, target):
+    n = len(arr)
+    left = 0
+    right = n
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] < target:
+            left = mid + 1
+        elif arr[mid] > target:
+            right = mid - 1
+        else:
+            return mid
+
+
 
 def binary_search_ini(arr, target):
     n = len(arr)
