@@ -1,84 +1,56 @@
-def QuickSort(arr, k):
+# def quickSort(arr):
+#     n = len(arr)
+#     return qsort(arr, 0, n-1)
+#
+# def qsort(arr, start, end):
+#     if start < end:
+#         left = start
+#         right = end
+#         key = arr[left]
+#     else:
+#         return arr
+#     while left < right:
+#         while left < right and arr[right] >= key:
+#             right -= 1
+#         if left < right:
+#             arr[left] = arr[right]
+#             left += 1
+#         while left < right and arr[left] <= key:
+#             left += 1
+#         if left < right:
+#             arr[right] = arr[left]
+#             right -= 1
+#     arr[left] = key
+#     qsort(arr, start, left-1)
+#     qsort(arr, left+1, end)
+#     return arr
 
-    def partiton(arr, left, right):
-        key = left
-        while left < right:
-            while left < right and arr[left] < arr[key]:
-                left += 1
-            while left < right and arr[right] > arr[key]:
-                right -= 1
-            arr[left], arr[right] = arr[right], arr[left]
-        arr[left], arr[key] = arr[key], arr[left] # 此时left=right
-        return left
-
-    def qsort(arr, left, right):
-        if left >= right:
-            return
-        mid = partiton(arr, left, right)
-        qsort(arr, left, mid - 1)
-        qsort(arr, mid + 1, right)
-
+def quickSort(arr):
     n = len(arr)
-    if n < k:
-        return 'input error'
-    qsort(arr, 0, n -1)
-    return arr[:k]
+    return qsort(arr, 0, n-1)
 
-
-def quickSort(arr, k):
-    def partation(arr, left, right):
-        key = left
-        while left < right:
-            while left < right and arr[left] < arr[key]:
-                left += 1
-            while left < right and arr[right] > arr[key]:
-                right -= 1
-            arr[left], arr[right] = arr[right], arr[left]
-        arr[key], arr[left] = arr[left], arr[right]
-        return left # mid
-
-    def qsort(arr, left, right):
-        if left >= right:
-            return
-        mid = partation(arr, left, right)
-        qsort(arr, left, mid-1)
-        qsort(arr, mid + 1,  right)
-
-    n=len(arr)
-    if n <= 1:
+def qsort(arr, start, end):
+    if start < end:
+        left = start
+        right = end
+        key = arr[left]
+    else:
         return arr
-    qsort(arr, 0, n-1)
-    return arr[:k]
-
-
-
-def QuickSort_ini(arr):
-    def partition(arr, left, right):
-        key = left
-        while left < right:
-            while left < right and arr[right] >= arr[key]:
-            # while arr[right] >= arr[key]:
-                right -= 1
-            while left < right and arr[left] <= arr[key]:
-            # while arr[left] <= arr[key]:
-                left += 1
-            arr[left], arr[right] = arr[right], arr[left]
-        arr[key], arr[left] = arr[left], arr[key]
-        return left
-
-    def quickSort(arr, left, right):
-        if left >= right:
-            return
-        mid = partition(arr, left, right)
-        quickSort(arr, left, mid - 1)
-        quickSort(arr, mid + 1, right)
-
-    n = len(arr)
-    if n <= 1:
-        return arr
-    quickSort(arr, 0, n -1)
+    while left < right:
+        while left < right and arr[right] >= key:
+            right -= 1
+        if left < right:
+            arr[left] = arr[right]
+            left += 1
+        while left < right and arr[left] <= key:
+            left += 1
+        if left < right:
+            arr[right] = arr[left]
+            right -= 1
+    arr[left] = key
+    qsort(arr, start, left-1)
+    qsort(arr, left+1, end)
     return arr
 
 arr = [2,6,1,5,3]
-print(QuickSort(arr))
-
+print(quickSort(arr))
