@@ -18,6 +18,8 @@ def add_layer(input, in_size, out_size, activation_function=None):
     :return:output：数据输出
     """
     Weight = tf.Variable(tf.random_normal([in_size, out_size]))
+    Weight = tf.Variable(tf.random_normal([in_size, out_size]))
+    biases = tf.Variable(tf.zeros([1, out_size]) + 0.1)
     biases = tf.Variable(tf.zeros([1, out_size]) + 0.1)
     W_mul_x_plus_b = tf.matmul(input, Weight) + biases
     # 根据是否有激活函数
@@ -51,7 +53,7 @@ prediction = add_layer(hidden_layer1, 10, 1, activation_function=None)
 loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys - prediction), reduction_indices=[1]))
 # 2.定义训练过程
 train_step = tf.train.GradientDescentOptimizer(0.1).minimize(loss)
-
+train_step = tf.train.GradientDescentOptimizer(0.1).minimize(loss)
 init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
