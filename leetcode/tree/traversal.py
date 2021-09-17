@@ -32,7 +32,7 @@ def mid_trav(root):
             # ll.append(node.right)
     return result
 
-def bach_trav(root):
+def back_trav(root):
     if not root:
         return []
     stack = [root]
@@ -67,5 +67,52 @@ def mid_trav_2(root):
 print(front_trav(n1))
 print(mid_trav(n1))
 print(mid_trav_2(n1))
-print(bach_trav(n1))
+print(back_trav(n1))
 
+def front_trav_tmp(root):
+    if not root:
+        return []
+    ll = [root]
+    res = list()
+    while len(ll) > 0:
+        tmp = ll.pop()
+        res.append(tmp.val)
+        if tmp.right:
+            ll.append(tmp.right)
+        if tmp.left:
+            ll.append(tmp.left)
+    return res
+print(front_trav_tmp(n1))
+
+def mid_trav_tmp(root):
+    if not root:
+        return []
+    node = root
+    ll = []
+    res = list()
+    while len(ll) != 0 or node:
+        if node:
+            ll.append(node)
+            node = node.left
+        else:
+            tmp = ll.pop()
+            res.append(tmp.val)
+            node = tmp.right
+    return res
+print(mid_trav_tmp(n1))
+
+
+def back_trav_tmp(root):
+    if not root:
+        return []
+    stack = [root]
+    res = []
+    while len(stack) > 0:
+        tmp = stack.pop(0)
+        res.append(tmp.val)
+        if tmp.left:
+            stack.append(tmp.left)
+        if tmp.right:
+            stack.append(tmp.right)
+    return res[::-1]
+print(back_trav_tmp(n1))

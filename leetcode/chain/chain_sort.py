@@ -73,4 +73,41 @@ def merge(head1, head2):
         tmp.next = tmp2
     return dummyNode.next
 
+# 1-->4-->3-->2-->5-->7-->6
+a = ListNode(1)
+b = ListNode(4)
+c = ListNode(3)
+# d = ListNode(2)
+# e = ListNode(5)
+# f = ListNode(7)
+# g = ListNode(6)
 
+a.next = b
+b.next = c
+# c.next = d
+# d.next = e
+# e.next = f
+# f.next = g
+
+def find_mid(head, tail):
+    if head.next == tail:
+        return head
+    slow = head
+    fast = head
+    while fast.next != tail:
+        slow = slow.next
+        fast = fast.next
+        if fast.next != tail:
+            fast = fast.next
+    return slow
+
+# mid_node = find_mid(a, None)
+# print(mid_node.val)
+
+# solu = Solution()
+# res = solu.sortList(a)
+import pdb;pdb.set_trace()
+res = sortList(a, None)
+while res != None:
+    print(res.val)
+    res = res.next
