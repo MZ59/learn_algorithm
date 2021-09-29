@@ -14,3 +14,5 @@ def maxSubArray(nums):
     index_max = dp.index(sum_max)
     sub_list = nums[index_dp[index_max]: index_max + 1]
     return max(dp), sub_list
+
+print(maxSubArray([1,3,-1,-8,5,2,4]))
