@@ -18,6 +18,7 @@ def cross_entropy(output, y_target):
 def cross_entropy_derivative(output, y_target):
     return -(y_target / output - (1 - y_target) / (1 - output))
 
+# MSE损失函数及其导数
 def mse(output, y_target):
     return np.mean(np.square(output - y_target))
 
@@ -41,19 +42,24 @@ class MLP:
         self.a2 = sigmoid(self.z2)
         return self.a2
 
+    # 反向传播
     def backward(self, X, y, output, learning_rate):
-        # 反向传播
+        # 损失函数梯度
         # loss_grad = cross_entropy_derivative(output, y)
         loss_grad = mse_derivative(output, y)
 
         # 输出层梯度
         a2_grad = loss_grad * sigmoid_derivative(self.a2)
+        # 计算隐藏层到输出层的权重的梯度
         W2_grad = np.dot(self.a1.T, a2_grad)
-        b2_grad = np.sum(a2_grad, axis=0, keepdims=True)
+        # 计算输出层的偏置的梯度
+        b2_grad = np.sum(a2_grad, axis=0, keepdims=True) # axis=0表示沿着第一个轴（列方向）进行求和；keepdims=True，那么求和后的数组会保持原来的维度，但是被求和的轴的长度会变成1，keepdims=False（默认值），那么求和后的数组会减少一个维度。
 
-        # 隐藏层梯度
-        a1_grad = np.dot(a2_grad, self.W2.T) * sigmoid_derivative(self.a1)
+        # 计算隐藏层的梯度
+        a1_grad = np.dot(a2_grad, self.W2.T) * sigmoid_derivative(self.a1) # 链式法则
+        # 计算输入层到隐藏层的权重的梯度
         W1_grad = np.dot(X.T, a1_grad)
+        # 计算隐藏层的偏置的梯度
         b1_grad = np.sum(a1_grad, axis=0)
 
         # 使用学习率更新参数

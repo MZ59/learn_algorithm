@@ -18,7 +18,7 @@ def binary_search(arr, target):
 def binary_search(arr, target):
     n = len(arr)
     left = 0
-    right = n
+    right = n - 1
     while left <= right:
         mid = (left + right) // 2
         if arr[mid] < target:
@@ -33,7 +33,7 @@ def binary_search(arr, target):
 def binary_search_ini(arr, target):
     n = len(arr)
     left = 0
-    right = n
+    right = n -1
     while left <= right:
         mid = (left + right) // 2
         if arr[mid] < target:
@@ -44,7 +44,7 @@ def binary_search_ini(arr, target):
             return mid
     return None
 
-arr = [2,4,1,3,5, 7, 6]
+arr = [2,4,1,3,5, 7, 6, 7]
 target = 5
 # import pdb;pdb.set_trace()
 print(binary_search(arr, target))
