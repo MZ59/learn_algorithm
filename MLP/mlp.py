@@ -18,6 +18,24 @@ def cross_entropy(output, y_target):
 def cross_entropy_derivative(output, y_target):
     return -(y_target / output - (1 - y_target) / (1 - output))
 
+# Softmax激活函数
+def softmax(z):
+    exp_z = np.exp(z - np.max(z, axis=1, keepdims=True))
+    return exp_z / np.sum(exp_z, axis=1, keepdims=True)
+
+# Softmax导数
+def softmax_derivative(softmax_out):
+    # 创建一个与softmax_out形状相同的对角矩阵
+    diag_matrix = np.diagflat(softmax_out)
+    # 计算softmax导数
+    softmax_grad = diag_matrix - np.dot(softmax_out, softmax_out.T)
+    return softmax_grad
+
+
+# 交叉熵损失函数
+def cross_entropy_softmax_loss(y_true, y_pred):
+    return -np.mean(np.sum(y_true * np.log(y_pred), axis=1))
+
 # MSE损失函数及其导数
 def mse(output, y_target):
     return np.mean(np.square(output - y_target))
@@ -39,17 +57,24 @@ class MLP:
         self.z1 = np.dot(X, self.W1) + self.b1
         self.a1 = sigmoid(self.z1)
         self.z2 = np.dot(self.a1, self.W2) + self.b2
-        self.a2 = sigmoid(self.z2)
+        # self.a2 = sigmoid(self.z2)
+        self.a2 = softmax(self.z2)
         return self.a2
 
     # 反向传播
     def backward(self, X, y, output, learning_rate):
         # 损失函数梯度
         # loss_grad = cross_entropy_derivative(output, y)
-        loss_grad = mse_derivative(output, y)
+        # loss_grad = mse_derivative(output, y)
+
+        output_grad = cross_entropy_softmax_loss(y, self.a2)
+        # 计算softmax导数
+        softmax_grad = softmax_derivative(self.a2)
+
 
         # 输出层梯度
-        a2_grad = loss_grad * sigmoid_derivative(self.a2)
+        # a2_grad = loss_grad * sigmoid_derivative(self.a2)
+        a2_grad = np.dot(output_grad, softmax_grad)
         # 计算隐藏层到输出层的权重的梯度
         W2_grad = np.dot(self.a1.T, a2_grad)
         # 计算输出层的偏置的梯度
@@ -72,12 +97,13 @@ class MLP:
         for epoch in range(epochs):
             # 前向传播
             output = self.forward(X)
-            # 计算损失
-            loss = cross_entropy(output, y)
             # 反向传播
             # import pdb;pdb.set_trace()
             self.backward(X, y, output, learning_rate)
             if epoch % 100 == 0:
+                # 计算损失
+                # loss = cross_entropy(output, y)
+                loss = cross_entropy_softmax_loss(y, output)
                 print(f"Epoch {epoch}, Loss: {loss}")
 
 
@@ -86,7 +112,8 @@ mlp = MLP(input_size=2, hidden_size=5, output_size=1)
 
 # 训练数据
 X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-y = np.array([[0], [1], [1], [0]])
+# y = np.array([[0], [1], [1], [0]])
+y = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 0, 0]])
 
 # 训练网络
 mlp.train(X, y, epochs=1000, learning_rate=0.1)
