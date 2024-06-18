@@ -32,9 +32,25 @@ def softmax_derivative(softmax_out):
     return softmax_grad
 
 
+def softmax_derivative(softmax_out):
+    # 创建与softmax_out相同形状的对角矩阵
+    num_samples = softmax_out.shape[0]
+    num_classes = softmax_out.shape[1]
+    diag_matrix = np.zeros((num_samples, num_classes, num_classes))
+    for i in range(num_samples):
+        diag_matrix[i, :, :] = np.diagflat(softmax_out[i])
+
+    # 计算softmax导数
+    softmax_grad = diag_matrix - np.swapaxes(np.expand_dims(softmax_out, -1) * np.expand_dims(softmax_out, -2), 1, 2)
+    return softmax_grad
+
+
 # 交叉熵损失函数
-def cross_entropy_softmax_loss(y_true, y_pred):
+def cross_entropy_softmax_loss(y_pred, y_true):
     return -np.mean(np.sum(y_true * np.log(y_pred), axis=1))
+
+def cross_entropy_softmax_loss_derivative(output, y_target):
+    return -(y_target / output - (1 - y_target) / (1 - output))
 
 # MSE损失函数及其导数
 def mse(output, y_target):
@@ -67,13 +83,14 @@ class MLP:
         # loss_grad = cross_entropy_derivative(output, y)
         # loss_grad = mse_derivative(output, y)
 
-        output_grad = cross_entropy_softmax_loss(y, self.a2)
+        # output_grad = cross_entropy_softmax_loss_derivative(output, y)
+        output_grad = cross_entropy_softmax_loss(output, y)
         # 计算softmax导数
-        softmax_grad = softmax_derivative(self.a2)
+        softmax_grad = softmax_derivative(output)
 
 
         # 输出层梯度
-        # a2_grad = loss_grad * sigmoid_derivative(self.a2)
+        # a2_grad = loss_grad * sigmoid_derivative(output)
         a2_grad = np.dot(output_grad, softmax_grad)
         # 计算隐藏层到输出层的权重的梯度
         W2_grad = np.dot(self.a1.T, a2_grad)
@@ -108,7 +125,7 @@ class MLP:
 
 
 # 创建网络
-mlp = MLP(input_size=2, hidden_size=5, output_size=1)
+mlp = MLP(input_size=2, hidden_size=5, output_size=3)
 
 # 训练数据
 X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
@@ -116,4 +133,5 @@ X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
 y = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 0, 0]])
 
 # 训练网络
+import pdb;pdb.set_trace()
 mlp.train(X, y, epochs=1000, learning_rate=0.1)
